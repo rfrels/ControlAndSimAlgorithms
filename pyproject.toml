@@ -1,0 +1,30 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "pybind11>=2.10.0",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["control_and_sim_algorithms*"]
+
+[project]
+name = "control_and_sim_algorithms"
+version = "0.0.1"
+description = "A collection of control and simulation algorithms, implemented in C++ and Python via pybind11"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    {name = "Roman Frels"},
+]
+
+dependencies = [
+    "matplotlib>=3.10.0",
+    "setuptools>=42",
+    "pybind11>=2.10.0",
+]
+
