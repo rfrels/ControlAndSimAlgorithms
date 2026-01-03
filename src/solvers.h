@@ -45,6 +45,16 @@ class EulerCauchy: public ExplicitOneStep {
         std::vector<double>& step(std::vector<double>& x, double h, const System& sys) override;
 };
 
+class ModifiedEulerCauchy: public ExplicitOneStep {
+    private:
+        std::vector<double>& step(std::vector<double>& x, double h, const System& sys) override;
+};
+
+class Heun: public ExplicitOneStep {
+    private:
+        std::vector<double>& step(std::vector<double>& x, double h, const System& sys) override;
+};
+
 class RungeKutta: public ExplicitOneStep {
     private:
         std::vector<double>& step(std::vector<double>& x, double h, const System& sys) override;

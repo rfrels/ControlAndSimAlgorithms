@@ -26,5 +26,6 @@ dependencies = [
     "matplotlib>=3.10.0",
     "setuptools>=42",
     "pybind11>=2.10.0",
+    "numpy",
 ]
 

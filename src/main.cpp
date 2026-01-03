@@ -21,10 +21,13 @@ struct SystemType {
 
 struct SimulationType {
   enum Value {
-    EC
+    EC, MEC, HN, RK
   };
   static std::unique_ptr<Solver> get_simulation(int simulationtype) {
     if (simulationtype == SimulationType::EC) return std::make_unique<EulerCauchy>();
+    if (simulationtype == SimulationType::MEC) return std::make_unique<ModifiedEulerCauchy>();
+    if (simulationtype == SimulationType::HN) return std::make_unique<Heun>();
+    if (simulationtype == SimulationType::RK) return std::make_unique<RungeKutta>();
     else return nullptr;
   }
 };
@@ -73,6 +76,9 @@ PYBIND11_MODULE(control_and_sim_algorithms, module) {
   py::module submodule_simulation = module.def_submodule("SimulationType", "Type enumerator");
   py::enum_<SimulationType::Value>(submodule_simulation, "SimulationType")
     .value("EC", SimulationType::EC)
+    .value("MEC", SimulationType::MEC)
+    .value("HN", SimulationType::HN)
+    .value("RK", SimulationType::RK)
     .export_values();
 
     module.doc() = R"pbdoc(

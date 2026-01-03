@@ -1,7 +1,21 @@
+- Include Solvers
+  - Explicit
+    - ModifiedEulerCauchy
+    - Heun
+    - Simpson
+    - DormandPrince
+    - RungeKuttaFehlberg
+  - Implicit
+    - GearFormulas q1-4
 - Include controllers
-- Include Latex
-- Include more systems
-- Include more simulation methods
-- include control input
+  - PID
+  - StateSpace P
+- Include Systems
+  - tbd
+- Include control input in simulations
+- Implement 
+  - solve_sim
+  - solve_sim_and_control
 - Do documentation
-- 
+- Do plotting
+- Do tests

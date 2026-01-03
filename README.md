@@ -4,7 +4,7 @@ Purpose
 ------------
 This is a collection of control and simulation algorithms, implemented in C++ and made available in python via pybind11.
 I'm aware that there are better implementations of these algorithms readily available in various other C++ libraries. 
-This is merely a means to keep my C++ and Control theory skills sharp.
+This is merely a way to keep my C++ and Control theory skills sharp.
 
 
 Installation
@@ -23,7 +23,7 @@ Usage
    - `python main.py`
  - Re-compile after changes in C++:
    - `python setup.py build_ext --inplace`
- - In case anything breaks unexpectedly:
+ - In case anything breaks unexpectedly or after adding dependencies:
    - `pip install -e . --force-reinstall`
 
 
