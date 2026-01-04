@@ -21,12 +21,13 @@ struct SystemType {
 
 struct SimulationType {
   enum Value {
-    EC, MEC, HN, RK
+    EC, MEC, HN, SN, RK
   };
   static std::unique_ptr<Solver> get_simulation(int simulationtype) {
     if (simulationtype == SimulationType::EC) return std::make_unique<EulerCauchy>();
     if (simulationtype == SimulationType::MEC) return std::make_unique<ModifiedEulerCauchy>();
     if (simulationtype == SimulationType::HN) return std::make_unique<Heun>();
+    if (simulationtype == SimulationType::SN) return std::make_unique<Simpson>();
     if (simulationtype == SimulationType::RK) return std::make_unique<RungeKutta>();
     else return nullptr;
   }
@@ -48,19 +49,57 @@ std::vector<std::vector<double>> solve_exact_and_sim(double te, double h, std::v
 
     // Simulated Solution
     output = simulation_ptr->solve(x0, 0., te, h, *system_ptr);
+
     // Exact Solution
     std::vector<double> exact_solution(output[0].size()); // number of included time steps
     for (size_t i=0; i < exact_solution.size(); i++) {
         exact_solution[i] = system_ptr->exact_sol(output[0][i]);
     }
     output.push_back(exact_solution);
+
     pybind11::print("C++ done");
     // output[0]: t, output[1]: sim x1, ... output[n] = sim xn, output[n+1]: exact x1, for n system dimension
     return output;
 }
 
-//std::vector<std::vector<double>> solve_sim(double te, double h, std::vector<double> x0,
-//    int systemtype, int simulationtype) {
+std::vector<std::vector<double>> solve_sim(double te, double h, std::vector<double> x0,
+    int systemtype, int simulationtype) {
+    std::unique_ptr<System> system_ptr = SystemType::get_system(systemtype, x0);
+    std::unique_ptr<Solver> simulation_ptr = SimulationType::get_simulation(simulationtype);
+    std::vector<std::vector<double>> output;
+
+    // Simulated Solution
+    output = simulation_ptr->solve(x0, 0., te, h, *system_ptr);
+
+    pybind11::print("C++ done");
+    // output[0]: t, output[1]: sim x1, ... output[n] = sim xn, for n system dimension
+    return output;
+}
+
+std::vector<std::vector<double>> solve_exact(double te, double h, std::vector<double> x0,
+    int systemtype, int simulationtype) {
+    std::unique_ptr<System> system_ptr = SystemType::get_system(systemtype, x0);
+    std::unique_ptr<Solver> simulation_ptr = SimulationType::get_simulation(simulationtype);
+    std::vector<std::vector<double>> output;
+
+    std::vector<double> t;
+
+    for (double i = 0.0; i < te; i+=h) {
+        t.push_back(i);
+    }
+    output.push_back(t);
+
+    // Exact Solution
+    std::vector<double> exact_solution(output[0].size()); // number of included time steps
+    for (size_t i=0; i < exact_solution.size(); i++) {
+        exact_solution[i] = system_ptr->exact_sol(output[0][i]);
+    }
+    output.push_back(exact_solution);
+
+    pybind11::print("C++ done");
+    // output[0]: t, output[1]: exact x1
+    return output;
+}
 
 //std::vector<std::vector<double>> solve_sim_and_control(double te, double h, std::vector<double> x0,
 //    int systemtype, int simulationtype, int controltype) {}
@@ -78,6 +117,7 @@ PYBIND11_MODULE(control_and_sim_algorithms, module) {
     .value("EC", SimulationType::EC)
     .value("MEC", SimulationType::MEC)
     .value("HN", SimulationType::HN)
+    .value("SN", SimulationType::SN)
     .value("RK", SimulationType::RK)
     .export_values();
 
@@ -94,10 +134,9 @@ PYBIND11_MODULE(control_and_sim_algorithms, module) {
     )pbdoc";
 
     module.def("solve_exact_and_sim", &solve_exact_and_sim, R"pbdoc(
-        Add something to a list
-
-        Some other explanation about the add function.
+        Solves the provided ordinary differential equation system exact and via the provided simulation method.
     )pbdoc");
+
 
 #ifdef VERSION_INFO
     module.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);

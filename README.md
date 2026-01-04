@@ -6,6 +6,10 @@ This is a collection of control and simulation algorithms, implemented in C++ an
 I'm aware that there are better implementations of these algorithms readily available in various other C++ libraries. 
 This is merely a way to keep my C++ and Control theory skills sharp.
 
+Example output
+------------
+![Example output from simulating various one step methods](mainpy_output.png)
+
 
 Installation
 ------------
@@ -25,7 +29,6 @@ Usage
    - `python setup.py build_ext --inplace`
  - In case anything breaks unexpectedly or after adding dependencies:
    - `pip install -e . --force-reinstall`
-
 
 
 License

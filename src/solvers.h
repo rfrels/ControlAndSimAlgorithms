@@ -55,6 +55,11 @@ class Heun: public ExplicitOneStep {
         std::vector<double>& step(std::vector<double>& x, double h, const System& sys) override;
 };
 
+class Simpson: public ExplicitOneStep {
+    private:
+        std::vector<double>& step(std::vector<double>& x, double h, const System& sys) override;
+};
+
 class RungeKutta: public ExplicitOneStep {
     private:
         std::vector<double>& step(std::vector<double>& x, double h, const System& sys) override;

@@ -3,31 +3,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 
-#fig, ax = plt.subplots()
+
+# --- Simulation Configuration ---
 x0 = [1.2, 1.0]
+t_max = 30.0
+dt = 0.007  # Increased slightly for better visual differentiation between solvers
+sys_type = csa.SystemType.UHO
 
+# Define the solvers to iterate through
+solvers = [
+    (csa.SimulationType.EC, "Euler-Cauchy"),
+    (csa.SimulationType.MEC, "Modified Euler-Cauchy"),
+    (csa.SimulationType.HN, "Heun"),
+    (csa.SimulationType.SN, "Simpson"),
+    (csa.SimulationType.RK, "Runge-Kutta")
+]
 
-start_time = time.perf_counter()  # Start the timer
-result = csa.solve_exact_and_sim(30.0, 0.001, x0, csa.SystemType.UHO, csa.SimulationType.EC)
-end_time = time.perf_counter()    # End the timer
-
-print(f"Elapsed time: {end_time - start_time:.6f} seconds")
-
-#print(result)
-t = result[0]
-sim = result[1]
-sim_diff = result[2]
-ex = result[3]
-
-#ax.plot(t, sim, label='simulation')
-#ax.plot(t, sim_diff, label='sim_diff')
-#ax.plot(t, ex, label='exact solution')
-
-#ax.set(xlabel='time (s)', ylabel='amplitude (m)',
-       #title='Damped Harmonic Oscillator')
-#ax.grid()
-#ax.legend()
-#plt.show()
 def plot_sim_comparison(ax, t, sim, exact, method_name):
     """
     Calculates RMSE and plots simulation vs exact solution.
@@ -48,31 +39,15 @@ def plot_sim_comparison(ax, t, sim, exact, method_name):
     ax.legend(loc='upper right', fontsize='small')
 
 
-# --- Simulation Configuration ---
-x0 = [1.2, 1.0]
-t_max = 30.0
-dt = 0.008  # Increased slightly for better visual differentiation between solvers
-sys_type = csa.SystemType.UHO
-
-# Define the solvers to iterate through
-solvers = [
-    (csa.SimulationType.EC, "Euler-Cauchy"),
-    (csa.SimulationType.MEC, "Modified Euler-Cauchy"),
-    (csa.SimulationType.HN, "Heun"),
-    #(csa.SimulationType.SN, "Simpson"),
-    (csa.SimulationType.RK, "Runge-Kutta")
-]
-
 # Create a 4x2 grid
 fig, axes = plt.subplots(4, 2, figsize=(12, 18), constrained_layout=True)
-fig.suptitle(f'Damped Harmonic Oscillator: Solver Accuracy Analysis ($dt={dt}s$)', fontsize=16)
+fig.suptitle(f'Damped Harmonic Oscillator: Solver Accuracy Analysis ($dt={dt}s, x0=[{x0[0]},{x0[1]}]$)', fontsize=16)
 
-# --- Row 1: Ground Truth (Exact Solutions) ---
-# We use the first simulation call to extract the analytical (exact) data
-init_res = csa.solve_exact_and_sim(t_max, dt, x0, sys_type, solvers[0][0])
+# --- Row 1: Ground truth (exact solution and simulated first derivative) ---
+init_res = csa.solve_exact_and_sim(t_max, dt, x0, sys_type, solvers[-1][0])
 t = init_res[0]
 ex_pos = init_res[3]
-ex_vel = init_res[2]  # Assuming index 4 is exact derivative
+sim_vel = init_res[2]  # Not exact, but simulated
 
 axes[0, 0].plot(t, ex_pos, color='blue', label='Analytical $x(t)$')
 axes[0, 0].set_title("Exact Solution: Position")
@@ -80,8 +55,8 @@ axes[0, 0].set_ylabel("Position (m)")
 axes[0, 0].legend()
 axes[0, 0].grid(True)
 
-axes[0, 1].plot(t, ex_vel, color='green', label="Analytical $x'(t)$")
-axes[0, 1].set_title("Exact Solution: Velocity")
+axes[0, 1].plot(t, sim_vel, color='green', label="Simulated $x'(t)$")
+axes[0, 1].set_title("Simulated Solution (Runge-Kutta): Velocity")
 axes[0, 1].set_ylabel("Velocity (m/s)")
 axes[0, 1].legend()
 axes[0, 1].grid(True)
