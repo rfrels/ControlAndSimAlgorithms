@@ -2,6 +2,8 @@
 #include "systems.h"
 #include "solvers.h"
 
+
+// Overloads of std::vector for linear algebra
 std::vector<double> operator+(const std::vector<double>& a,
                               const std::vector<double>& b) {
     if (a.size() != b.size())
@@ -50,6 +52,8 @@ void Solver::append_state(std::vector<std::vector<double>>& x, const std::vector
     }
 }
 
+// Solve method for explicit one step methods. Utilizes different step methods,
+// depending on exact one step method chosen.
 std::vector<std::vector<double>> ExplicitOneStep::solve(const std::vector<double>& x0, double t0, double te, double h,
     const System& sys) {
     size_t dim = x0.size();

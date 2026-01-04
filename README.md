@@ -10,6 +10,17 @@ Example output
 ------------
 ![Example output from simulating various one step methods](mainpy_output.png)
 
+Features
+------------
+Numerical Solvers:
+- Euler Cauchy 
+- Modified Euler Cauchy
+- Heun
+- Simpson
+- Runge Kutta
+
+Systems:
+- Underdampe harmonic oscillator (system order 2)
 
 Installation
 ------------
@@ -22,7 +33,9 @@ Installation
 
 Usage
 ------------
-
+For usage see main.py. This illustrates nicely how to utilize the various functions from python.
+You might want to dive one level deeper into main.cpp, which gives event more insights on the interface of python and 
+C++.
  - Normal execution:
    - `python main.py`
  - Re-compile after changes in C++:

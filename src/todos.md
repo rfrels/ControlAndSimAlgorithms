@@ -1,8 +1,5 @@
 - Include Solvers
   - Explicit
-    - ModifiedEulerCauchy
-    - Heun
-    - Simpson
     - DormandPrince
     - RungeKuttaFehlberg
   - Implicit
@@ -13,9 +10,8 @@
 - Include Systems
   - tbd
 - Include control input in simulations
-- Implement 
-  - solve_sim
+- Implement
   - solve_sim_and_control
 - Do documentation
-- Do plotting
 - Do tests
+- Throw errors for wrong parameter ranges
